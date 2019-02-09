@@ -62,13 +62,13 @@ public class NowPlayingFragment extends Fragment implements NowPlayingView  {
     @Override
     public void showLoad() {
         swipeRefreshLayout.setRefreshing(true);
-        //Toast.makeText(getContext(), "Loading..", Toast.LENGTH_SHORT).show();
+  //      Toast.makeText(getActivity(), "Loading..", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void finishLoad() {
         swipeRefreshLayout.setRefreshing(false);
-        //Toast.makeText(getContext(), "Finish!", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getActivity(), "Finish!", Toast.LENGTH_SHORT).show();
 
     }
 
