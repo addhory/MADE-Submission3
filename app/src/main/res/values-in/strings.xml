@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">KatalogFilm</string>
+    <string name="judul_film">Judul Film</string>
+    <string name="cari">Cari</string>
+    <string name="todo">TODO</string>
+    <string name="spiderman">Spiderman</string>
+    <string name="movie_overview">Ringkasan</string>
+    <string name="loading">Loading..</string>
+    <string name="_50">50</string>
+    <string name="rating">Bintang</string>
+    <string name="spiderbom">SpiderBom</string>
+    <string name="_8">8</string>
+    <string name="duration">Durasi</string>
+    <string name="_5">5</string>
+    <string name="language">Bahasa</string>
+    <string name="genres">Genre</string>
+    <string name="release">Rilis</string>
+    <string name="overview">Ringkasan</string>
+    <string name="now_playing">Sedang Bermain</string>
+    <string name="up_coming">Akan Datang</string>
+    <string name="change_lang">Ganti Bahasa</string>
+</resources>

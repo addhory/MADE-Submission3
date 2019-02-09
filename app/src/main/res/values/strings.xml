@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">KatalogFilm</string>
+    <string name="judul_film">Judul Film</string>
+    <string name="cari">Cari</string>
+    <string name="todo">TODO</string>
+    <string name="spiderman">Spiderman</string>
+    <string name="movie_overview">Movie Overview</string>
+    <string name="loading">Loading..</string>
+    <string name="_50">50</string>
+    <string name="rating">Rating</string>
+    <string name="spiderbom">SpiderBom</string>
+    <string name="_8">8</string>
+    <string name="duration">Duration</string>
+    <string name="_5">5</string>
+    <string name="language">Language</string>
+    <string name="genres">Genres</string>
+    <string name="release">Release</string>
+    <string name="overview">Overview</string>
+    <string name="now_playing">Now Playing</string>
+    <string name="up_coming">Up Coming</string>
+    <string name="change_lang">Change Language</string>
+</resources>
