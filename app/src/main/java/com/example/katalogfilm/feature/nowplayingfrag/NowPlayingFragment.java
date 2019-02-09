@@ -48,9 +48,6 @@ public class NowPlayingFragment extends Fragment implements NowPlayingView  {
         recyclerView.setAdapter(movieAdapter);
         swipeRefreshLayout= view.findViewById(R.id.swipeRefreshNow);
 
-        if (swipeRefreshLayout != null) {
-            swipeRefreshLayout.setRefreshing(false);
-        }
         presenter = new NowPlayingPresenter(this);
         presenter.getList();
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -65,13 +62,13 @@ public class NowPlayingFragment extends Fragment implements NowPlayingView  {
     @Override
     public void showLoad() {
         swipeRefreshLayout.setRefreshing(true);
-        Toast.makeText(getContext(), "Loading..", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "Loading..", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void finishLoad() {
         swipeRefreshLayout.setRefreshing(false);
-        Toast.makeText(getContext(), "Finish!", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "Finish!", Toast.LENGTH_SHORT).show();
 
     }
 
