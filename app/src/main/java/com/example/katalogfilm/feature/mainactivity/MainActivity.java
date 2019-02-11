@@ -11,10 +11,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.katalogfilm.R;
+import com.example.katalogfilm.base.BaseAppCompatActivity;
 import com.example.katalogfilm.feature.nowplayingfrag.NowPlayingFragment;
 import com.example.katalogfilm.feature.upcomingfrag.UpcomingFragment;
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseAppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+    private Fragment pageContent = new NowPlayingFragment();
 
     BottomNavigationView bottomNavigationView;
     @Override
@@ -27,12 +29,26 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         //set load NowFrag
-        loadFragment(new NowPlayingFragment());
+        if(savedInstanceState==null){
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.main_container, pageContent)
+                    .commit();
+        }else{
+        pageContent= getSupportFragmentManager().getFragment(savedInstanceState, KEY_FRAGMENT);
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_container,pageContent);
+        }
+
+
+    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        getSupportFragmentManager().putFragment(outState, KEY_FRAGMENT, pageContent);
+        super.onSaveInstanceState(outState);
     }
 
 
 
-    private boolean loadFragment(Fragment fragment) {
+   /* private boolean loadFragment(Fragment fragment) {
         if (fragment != null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.main_container, fragment)
@@ -40,21 +56,23 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             return true;
         }
         return false;
-    }
+    }*/
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        Fragment fragment = null;
         switch (menuItem.getItemId()){
             case R.id.nowPlaying:
-                fragment = new NowPlayingFragment();
+                pageContent = new NowPlayingFragment();
                 break;
             case R.id.upComing:
-                fragment = new UpcomingFragment();
+                pageContent = new UpcomingFragment();
                 break;
 
         }
-        return loadFragment(fragment);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.main_container, pageContent)
+                .commit();
+        return true;
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -2,6 +2,7 @@ package com.example.katalogfilm.feature.nowplayingfrag;
 
 import com.example.katalogfilm.data.entity.Movie;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface NowPlayingView {
@@ -10,7 +11,7 @@ public interface NowPlayingView {
 
     void finishLoad();
 
-    void showList(List<Movie> data);
+    void showList(ArrayList<Movie> data);
 
     void noData();
 }

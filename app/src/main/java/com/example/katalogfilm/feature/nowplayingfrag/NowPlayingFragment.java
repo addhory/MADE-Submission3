@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +18,13 @@ import android.widget.Toast;
 
 import com.example.katalogfilm.R;
 import com.example.katalogfilm.adapter.MovieAdapter;
+import com.example.katalogfilm.base.BaseFragment;
 import com.example.katalogfilm.data.entity.Movie;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NowPlayingFragment extends Fragment implements NowPlayingView  {
-    public static final String KEY_MOVIES = "movies";
+public class NowPlayingFragment extends BaseFragment implements NowPlayingView  {
 
     private RecyclerView recyclerView;
     private NowPlayingPresenter presenter;
@@ -31,14 +33,14 @@ public class NowPlayingFragment extends Fragment implements NowPlayingView  {
     private SwipeRefreshLayout swipeRefreshLayout;
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,  ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.nowplaying_frag, container, false);
 
 
         return view;
     }
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable final Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.rv_listNow);
         recyclerView.setHasFixedSize(true);
@@ -49,13 +51,19 @@ public class NowPlayingFragment extends Fragment implements NowPlayingView  {
         swipeRefreshLayout= view.findViewById(R.id.swipeRefreshNow);
 
         presenter = new NowPlayingPresenter(this);
-        presenter.getList();
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 presenter.getList();
             }
         });
+        if(savedInstanceState==null){
+            presenter.getList();
+
+        }else{
+            movieList=savedInstanceState.getParcelableArrayList(KEY_MOVIES);
+            movieAdapter.refill(movieList);
+        }
 
     }
 
@@ -73,10 +81,9 @@ public class NowPlayingFragment extends Fragment implements NowPlayingView  {
     }
 
     @Override
-    public void showList(List<Movie> data) {
-        movieList.clear();
-        movieList.addAll(data);
-        movieAdapter.notifyDataSetChanged();
+    public void showList(ArrayList<Movie> data) {
+        movieList=data;
+        movieAdapter.refill(movieList);
     }
 
     @Override
@@ -97,5 +104,12 @@ public class NowPlayingFragment extends Fragment implements NowPlayingView  {
             Toast.makeText(getContext(), "Portrait", Toast.LENGTH_SHORT).show();
 
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putParcelableArrayList(KEY_MOVIES, movieList);
+        super.onSaveInstanceState(outState);
+        Log.d("tes","ding"+outState);
     }
 }

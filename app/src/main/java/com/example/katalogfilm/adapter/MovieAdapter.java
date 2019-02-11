@@ -21,9 +21,9 @@ import java.util.List;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
 
     Context context;
-    List<Movie> movieList;
+    ArrayList<Movie> movieList;
 
-    public MovieAdapter(List<Movie> movieList, Context context) {
+    public MovieAdapter(ArrayList<Movie> movieList, Context context) {
         this.context = context;
         this.movieList = movieList;
     }
