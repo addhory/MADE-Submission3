@@ -1,10 +1,16 @@
 package com.example.katalogfilm.feature.detailmovieactivity;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -13,18 +19,29 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.katalogfilm.R;
+import com.example.katalogfilm.data.db.DatabaseHelper;
+import com.example.katalogfilm.data.db.FvDatabaseContract;
+import com.example.katalogfilm.data.db.FvMovieHelper;
 import com.example.katalogfilm.data.entity.Genre;
 import com.example.katalogfilm.data.entity.Movie;
 import com.example.katalogfilm.data.entity.MovieItem;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.example.katalogfilm.data.db.FvDatabaseContract.CONTENT_URI;
+import static com.example.katalogfilm.data.db.FvDatabaseContract.TABLE_FV;
+import static com.example.katalogfilm.data.db.FvDatabaseContract.favoriteColumns.MOVIE_ID;
+import static com.example.katalogfilm.data.db.FvDatabaseContract.favoriteColumns.OVERVIEW;
+import static com.example.katalogfilm.data.db.FvDatabaseContract.favoriteColumns.POSTER_PATH;
+import static com.example.katalogfilm.data.db.FvDatabaseContract.favoriteColumns.TITLE;
 
 public class DetailActivity extends AppCompatActivity implements DetailView {
     public static final String EXTRA_MOVIE = "extra_movie";
@@ -35,6 +52,7 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     SwipeRefreshLayout swipeRefreshLayout;
     LinearLayout mvContent;
     Movie mv;
+
     @BindView(R.id.tv_detail_title_movie)TextView mvTitle;
     @BindView(R.id.tv_detail_tagline_movie)TextView mvTagline;
     @BindView(R.id.tv_rating)TextView mvRating;
@@ -45,11 +63,23 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     @BindView(R.id.tv_genre)TextView mvGenre;
     @BindView(R.id.tv_release)TextView mvRelease;
     @BindView(R.id.img_detail_movie)CircleImageView imgMvDetail;
+    private Boolean isFavorite = false;
+    private Uri uriDetailMovie;
+    private FvMovieHelper fvMovieHelper;
+    private DatabaseHelper helper;
+    private static final String TABLE_NAME = TABLE_FV;
+    private String id;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.movie_detail);
+
+        fvMovieHelper=new FvMovieHelper(this);
+        fvMovieHelper.open();
+        helper=new DatabaseHelper(this);
+
 
         if (getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -63,6 +93,7 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
 
         mv=getIntent().getParcelableExtra(EXTRA_MOVIE);
         presenter.getData(mv.getId());
+        isFavorite=checkFav();
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -72,14 +103,45 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
         });
     }
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (helper != null) {
+            helper.close();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.movie_detail_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        if (isFavorite) {
+            menu.findItem(R.id.btn_fav).setIcon(R.drawable.ic_favorite_black_24dp);
+        } else {
+            menu.findItem(R.id.btn_fav).setIcon(R.drawable.ic_favorite_border_black_24dp);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 return true;
+
+            case R.id.btn_fav:
+                invalidateOptionsMenu();
+                toggleFavorite(item);
+                return true;
+
         }
         return false;
     }
+
+
     @Override
     public void showLoad() {
         swipeRefreshLayout.setRefreshing(true);
@@ -137,4 +199,39 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
         }
     }
 
+    private void toggleFavorite(MenuItem item) {
+        if (isFavorite) {
+            Uri uri = Uri.parse(CONTENT_URI+"/" + mv.getId());
+            getContentResolver().delete(uri,null,null);
+            //fvMovieHelper.delete(mv.getId());
+            Toast.makeText(this,R.string.remove_fav, Toast.LENGTH_SHORT).show();
+            isFavorite = false;
+        } else {
+            saveMovie(mv);
+            //fvMovieHelper.insert(mv);
+            Toast.makeText(this,R.string.add_fav, Toast.LENGTH_SHORT).show();
+            item.setIcon(R.drawable.ic_favorite_border_black_24dp);
+            isFavorite = true;
+        }
+    }
+
+    private boolean checkFav(){
+        //SQLiteDatabase sqLiteDatabase= helper.getWritableDatabase();
+        //String query = "SELECT * FROM " + TABLE_FV + " WHERE movie_id = " +mv.getId();
+        Uri uri = Uri.parse(CONTENT_URI+"/"+mv.getId());
+        Cursor c = getContentResolver().query(uri,null,null,null,null);
+        if(c!=null){
+            return c.getCount()>0;
+        }
+        return false;
+
+    }
+    private void saveMovie(Movie movie){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MOVIE_ID, movie.getId());
+        contentValues.put(TITLE, movie.getTitle());
+        contentValues.put(OVERVIEW, movie.getOverview());
+        contentValues.put(POSTER_PATH, movie.getPosterPath());
+        getContentResolver().insert(CONTENT_URI, contentValues);
+    }
 }

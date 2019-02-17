@@ -1,9 +1,16 @@
 package com.example.katalogfilm.data.entity;
 
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
+
+import static com.example.katalogfilm.data.db.FvDatabaseContract.favoriteColumns.MOVIE_ID;
+import static com.example.katalogfilm.data.db.FvDatabaseContract.favoriteColumns.OVERVIEW;
+import static com.example.katalogfilm.data.db.FvDatabaseContract.favoriteColumns.POSTER_PATH;
+import static com.example.katalogfilm.data.db.FvDatabaseContract.favoriteColumns.TITLE;
+import static com.example.katalogfilm.data.db.FvDatabaseContract.getColumnString;
 
 public class Movie implements Parcelable {
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -24,23 +31,36 @@ public class Movie implements Parcelable {
     @SerializedName("overview")
     private String overview;
     @SerializedName("id")
-    private int id;
+    private String id;
+
 
     public Movie() {
+    }
+    public Movie(Cursor cursor) {
+        this.title= getColumnString(cursor, TITLE);
+        this.id=getColumnString(cursor, MOVIE_ID);
+        this.overview=getColumnString(cursor, OVERVIEW);
+        this.posterPath=getColumnString(cursor, POSTER_PATH);
+    }
+    public Movie(String title, String id, String overview, String posterPath){
+        this.id = id;
+        this.title=title;
+        this.overview=overview;
+        this.posterPath=posterPath;
     }
 
     protected Movie(Parcel in) {
         this.title = in.readString();
         this.posterPath = in.readString();
         this.overview = in.readString();
-        this.id = in.readInt();
+        this.id = in.readString();
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -78,6 +98,6 @@ public class Movie implements Parcelable {
         dest.writeString(this.title);
         dest.writeString(this.posterPath);
         dest.writeString(this.overview);
-        dest.writeInt(this.id);
+        dest.writeString(this.id);
     }
 }

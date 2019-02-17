@@ -14,7 +14,7 @@ public class DetailPresenter {
         this.view=view;
     }
 
-    public void getData(int id){
+    public void getData(String id){
         view.showLoad();
 
         Call<MovieItem> movieItemCall = ApiRetrofit.getService().getDetailMovie(id);

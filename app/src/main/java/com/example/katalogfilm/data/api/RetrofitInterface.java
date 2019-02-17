@@ -18,7 +18,7 @@ public interface RetrofitInterface {
     Call<MovieResult> getSearchMovie(@Query("query") String string);
 
     @GET("3/movie/{id}?api_key="+BuildConfig.TMDB_API_KEY+"&language=en-US")
-    Call<MovieItem> getDetailMovie(@Path("id") int id);
+    Call<MovieItem> getDetailMovie(@Path("id") String id);
 
     @GET("3/movie/upcoming?api_key="+ BuildConfig.TMDB_API_KEY +"&page=1")
     Call<MovieResult> getUpcoming();

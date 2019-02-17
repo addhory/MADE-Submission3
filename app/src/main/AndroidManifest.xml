@@ -2,7 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.katalogfilm">
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <permission
+        android:name="com.example.katalogfilm.READ_DATABASE"
+        android:protectionLevel="normal" />
+    <permission
+        android:name="com.example.katalogfilm.WRITE_DATABASE"
+        android:protectionLevel="normal" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -12,6 +19,13 @@
         android:theme="@style/AppTheme">
         <activity android:name=".feature.detailmovieactivity.DetailActivity"
             android:configChanges="orientation|keyboardHidden"></activity>
+        <provider
+            android:authorities="com.example.katalogfilm"
+            android:name=".data.provider.MovieProvider"
+            android:exported="true"
+            android:readPermission="com.example.katalogfilm.READ_DATABASE"
+            android:writePermission="com.example.katalogfilm.WRITE_DATABASE"/>
+
         <activity android:name=".feature.mainactivity.MainActivity"
             android:configChanges="orientation|keyboardHidden">
             <intent-filter>

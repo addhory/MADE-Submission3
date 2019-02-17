@@ -13,4 +13,11 @@
         android:title="@string/up_coming"
         android:icon="@drawable/ic_fast_forward_black_24dp"
         app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/favoriteMovie"
+        android:enabled="true"
+        android:title="@string/favorite"
+        android:icon="@drawable/ic_favorite_black_24dp"
+        app:showAsAction="ifRoom"/>
 </menu>

@@ -20,4 +20,8 @@
     <string name="now_playing">Sedang Bermain</string>
     <string name="up_coming">Akan Datang</string>
     <string name="change_lang">Ganti Bahasa</string>
+    <string name="favorite">Favorit</string>
+    <string name="remove_fav">Dihapus dari Favorit</string>
+    <string name="add_fav">Ditambahkan ke Favorit</string>
+    <string name="no_data_available">Tidak Ada Data!</string>
 </resources>

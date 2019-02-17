@@ -12,6 +12,7 @@ import android.view.MenuItem;
 
 import com.example.katalogfilm.R;
 import com.example.katalogfilm.base.BaseAppCompatActivity;
+import com.example.katalogfilm.feature.favoritefrag.FavoriteMovFragment;
 import com.example.katalogfilm.feature.nowplayingfrag.NowPlayingFragment;
 import com.example.katalogfilm.feature.upcomingfrag.UpcomingFragment;
 
@@ -66,6 +67,9 @@ public class MainActivity extends BaseAppCompatActivity implements BottomNavigat
                 break;
             case R.id.upComing:
                 pageContent = new UpcomingFragment();
+                break;
+            case R.id.favoriteMovie:
+                pageContent=new FavoriteMovFragment();
                 break;
 
         }

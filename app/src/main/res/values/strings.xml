@@ -19,4 +19,8 @@
     <string name="now_playing">Now Playing</string>
     <string name="up_coming">Up Coming</string>
     <string name="change_lang">Change Language</string>
+    <string name="favorite">Favorite</string>
+    <string name="remove_fav">Removed from Favorite</string>
+    <string name="add_fav">Added to Favorite</string>
+    <string name="no_data_available">No Data Available!</string>
 </resources>

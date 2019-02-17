@@ -62,7 +62,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
             tvOverview= itemView.findViewById(R.id.tv_movie_overview);
             itemViewe=itemView;
         }
-        void BindItem(final Movie movie, final Context context) {
+        private void BindItem(final Movie movie, final Context context) {
             tvTitle.setText(movie.getTitle());
             tvOverview.setText(movie.getOverview());
             Glide.with(context)
